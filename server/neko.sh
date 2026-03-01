@@ -18,7 +18,7 @@ read -rp "  Admin password [admin]: " neko_admin_pass
 neko_admin_pass="${neko_admin_pass:-admin}"
 
 # Detect server IP for WebRTC
-SERVER_IP=$(hostname -I | awk '{print $1}')
+SERVER_IP=$(ip -4 route get 1.1.1.1 2>/dev/null | awk '{print $7; exit}')
 read -rp "  Server IP for WebRTC [$SERVER_IP]: " neko_ip
 neko_ip="${neko_ip:-$SERVER_IP}"
 
