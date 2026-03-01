@@ -17,6 +17,7 @@ COMPONENTS=(
   "git|Git Config|Smart defaults (rebase, rerere, aliases)|1"
   "git-tools|Git Tools|Lazygit + GitHub CLI|0"
   "neovim|Neovim|Modern terminal editor|1"
+  "yay|Yay|AUR helper for installing community packages|1"
   "cli-tools|CLI Tools|btop, fd, ripgrep, dust, jq, tldr, tree, fastfetch|1"
   "docker|Docker|Docker + Compose + Buildx + Lazydocker|0"
   "ssh|SSH Hardening|TCP MTU probing for connection reliability|1"
