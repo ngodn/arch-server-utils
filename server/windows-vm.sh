@@ -1,6 +1,6 @@
 #!/bin/bash
 # Server Tools: Windows VM via Docker (dockurr/windows) with KVM + RDP
-[[ -z $OMARCHY_SERVER_HELPERS ]] && source "$(dirname "${BASH_SOURCE[0]}")/helpers.sh"
+[[ -z ${OMARCHY_SERVER_HELPERS:-} ]] && source "$(dirname "${BASH_SOURCE[0]}")/helpers.sh"
 
 info "Installing Windows VM tool..."
 

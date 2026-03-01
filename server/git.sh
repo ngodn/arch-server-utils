@@ -1,6 +1,6 @@
 #!/bin/bash
 # Git Config: Smart defaults (rebase, rerere, aliases)
-[[ -z $OMARCHY_SERVER_HELPERS ]] && source "$(dirname "${BASH_SOURCE[0]}")/helpers.sh"
+[[ -z ${OMARCHY_SERVER_HELPERS:-} ]] && source "$(dirname "${BASH_SOURCE[0]}")/helpers.sh"
 
 info "Setting up Git Config..."
 

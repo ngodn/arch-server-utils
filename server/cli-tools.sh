@@ -1,6 +1,6 @@
 #!/bin/bash
 # CLI Tools: Modern replacements for common commands
-[[ -z $OMARCHY_SERVER_HELPERS ]] && source "$(dirname "${BASH_SOURCE[0]}")/helpers.sh"
+[[ -z ${OMARCHY_SERVER_HELPERS:-} ]] && source "$(dirname "${BASH_SOURCE[0]}")/helpers.sh"
 
 info "Setting up CLI Tools..."
 

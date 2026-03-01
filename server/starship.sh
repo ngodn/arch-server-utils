@@ -1,6 +1,6 @@
 #!/bin/bash
 # Starship Prompt: Minimal prompt with git branch/status
-[[ -z $OMARCHY_SERVER_HELPERS ]] && source "$(dirname "${BASH_SOURCE[0]}")/helpers.sh"
+[[ -z ${OMARCHY_SERVER_HELPERS:-} ]] && source "$(dirname "${BASH_SOURCE[0]}")/helpers.sh"
 
 info "Setting up Starship Prompt..."
 

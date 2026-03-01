@@ -1,6 +1,6 @@
 #!/bin/bash
 # Server Tools: System package updater + AUR updater + orphan cleanup
-[[ -z $OMARCHY_SERVER_HELPERS ]] && source "$(dirname "${BASH_SOURCE[0]}")/helpers.sh"
+[[ -z ${OMARCHY_SERVER_HELPERS:-} ]] && source "$(dirname "${BASH_SOURCE[0]}")/helpers.sh"
 
 info "Installing server update tools..."
 

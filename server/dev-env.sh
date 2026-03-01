@@ -1,6 +1,6 @@
 #!/bin/bash
 # Dev Environments: Languages via mise (Node, Python, Ruby, Go, etc.)
-[[ -z $OMARCHY_SERVER_HELPERS ]] && source "$(dirname "${BASH_SOURCE[0]}")/helpers.sh"
+[[ -z ${OMARCHY_SERVER_HELPERS:-} ]] && source "$(dirname "${BASH_SOURCE[0]}")/helpers.sh"
 
 info "Setting up Development Environments..."
 

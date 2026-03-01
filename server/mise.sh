@@ -1,6 +1,6 @@
 #!/bin/bash
 # Mise: Version manager (Node, Ruby, Python, etc.)
-[[ -z $OMARCHY_SERVER_HELPERS ]] && source "$(dirname "${BASH_SOURCE[0]}")/helpers.sh"
+[[ -z ${OMARCHY_SERVER_HELPERS:-} ]] && source "$(dirname "${BASH_SOURCE[0]}")/helpers.sh"
 
 info "Setting up Mise version manager..."
 
