@@ -9,7 +9,7 @@ info "Setting up Caddy reverse proxy with local HTTPS..."
 pkg_install caddy avahi nss-mdns
 
 # Prompt for hostname
-default_hostname=$(hostname)
+default_hostname=$(cat /etc/hostname 2>/dev/null || hostname 2>/dev/null || echo "server")
 echo
 read -rp "  Local hostname [${default_hostname}]: " local_hostname
 local_hostname="${local_hostname:-$default_hostname}"
