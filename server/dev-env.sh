@@ -63,6 +63,12 @@ for i in "${!LANG_NAMES[@]}"; do
         ;;
       1) # Python
         info "Installing Python..."
+        # Precompiled python-build-standalone doesn't work in chroot/container
+        # (missing lib dir). Force compile from source in those environments.
+        if ! pidof systemd &>/dev/null; then
+          mise settings python.compile=1
+          pkg_install base-devel openssl zlib xz tk sqlite
+        fi
         mise use --global python@latest
         info "Installing uv package manager..."
         curl -fsSL https://astral.sh/uv/install.sh | sh
