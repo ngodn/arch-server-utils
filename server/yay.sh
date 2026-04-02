@@ -12,6 +12,13 @@ fi
 # Build dependencies
 pkg_install base-devel git
 
+# Use fakeroot-tcp in chroot/container environments where SYSV IPC is unavailable
+if ! fakeroot true &>/dev/null; then
+  warn "fakeroot SYSV IPC not supported (chroot/container?), switching to fakeroot-tcp..."
+  sudo pacman -Rdd --noconfirm fakeroot &>/dev/null
+  pkg_install fakeroot-tcp
+fi
+
 # Clone and build yay
 TMPDIR=$(mktemp -d)
 git clone https://aur.archlinux.org/yay-bin.git "$TMPDIR/yay-bin"
