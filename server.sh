@@ -20,7 +20,7 @@ COMPONENTS=(
   "yay|Yay|AUR helper for installing community packages|1"
   "cli-tools|CLI Tools|btop, fd, ripgrep, dust, jq, tldr, tree, fastfetch|1"
   "docker|Docker|Docker + Compose + Buildx + Lazydocker|0"
-  "ssh|SSH Hardening|TCP MTU probing for connection reliability|1"
+  "ssh|SSH Server|Hardened SSH server (no root login, custom port)|1"
   "gpg|GPG Keys|Multiple fallback keyservers|1"
   "systemd|Systemd|Faster shutdown timeout (5s)|1"
   "firewall|Firewall|UFW firewall with SSH allowed|0"
