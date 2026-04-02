@@ -36,6 +36,7 @@ COMPONENTS=(
   "reset-sudo|Sudo Reset|Clear sudo lockout after failed attempts|0"
   "drive-info|Drive Info|Drive information viewer (size, model, partitions)|1"
   "code-server|Code Server|VS Code in the browser (port 9301)|0"
+  "caddy|Caddy Proxy|HTTPS reverse proxy for local services via mDNS hostname|0"
   "neko|Neko Browsers|Firefox (9311) + Chrome (9312) in Docker via WebRTC|0"
 )
 
