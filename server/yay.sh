@@ -13,42 +13,30 @@ fi
 pkg_install base-devel git
 
 # In chroot/container environments (e.g. Android), SYSV IPC is often unavailable
-# causing fakeroot to fail. Build a temporary fakeroot with TCP IPC to bootstrap,
-# then use it to install fakeroot-tcp from AUR properly via makepkg.
+# causing fakeroot to fail. Build fakeroot from source with TCP IPC directly.
 # Ref: https://gist.github.com/tytydraco/df14e4f7af737e7b51ba35842f75342b
 if ! fakeroot true &>/dev/null; then
-  warn "fakeroot SYSV IPC not supported (chroot/container?), bootstrapping fakeroot-tcp..."
-  pkg_install autoconf automake libtool po4a
+  warn "fakeroot SYSV IPC not supported (chroot/container?), building fakeroot with TCP IPC..."
+  pkg_install autoconf automake libtool
 
   FAKEROOT_TMP=$(mktemp -d)
   cd "$FAKEROOT_TMP"
 
-  # Build a temporary fakeroot with TCP IPC into /opt/fakeroot
   curl -fsSL "http://ftp.debian.org/debian/pool/main/f/fakeroot/fakeroot_1.37.2.orig.tar.gz" -o fakeroot.tar.gz
   tar xf fakeroot.tar.gz
   cd fakeroot-1.37.2
   ./bootstrap
-  ./configure --prefix=/opt/fakeroot --libdir=/opt/fakeroot/libs --disable-static --with-ipc=tcp
+  ./configure --prefix=/usr --libdir=/usr/lib/libfakeroot --disable-static --with-ipc=tcp
   make -j"$(nproc)"
   sudo make install
-
-  # Put temporary fakeroot first in PATH, then build fakeroot-tcp from AUR
-  export PATH="/opt/fakeroot/bin:$PATH"
-  cd "$FAKEROOT_TMP"
-  git clone https://aur.archlinux.org/fakeroot-tcp.git
-  cd fakeroot-tcp
-  makepkg -si --noconfirm
-
-  # Clean up temporary fakeroot
-  sudo rm -rf /opt/fakeroot
   cd /
   rm -rf "$FAKEROOT_TMP"
 
   if ! fakeroot true &>/dev/null; then
-    error "Failed to install fakeroot-tcp"
+    error "Failed to build fakeroot with TCP IPC"
     return 1
   fi
-  success "fakeroot-tcp installed"
+  success "fakeroot rebuilt with TCP IPC support"
 fi
 
 # Clone and build yay
