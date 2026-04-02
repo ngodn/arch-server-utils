@@ -46,6 +46,8 @@ After=network.target
 
 [Service]
 Type=exec
+Environment=HOME=${HOME}
+Environment=PATH=${HOME}/.local/bin:${HOME}/.local/share/mise/shims:${HOME}/.cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 ExecStart=/usr/bin/code-server
 Restart=always
 User=${USER}
