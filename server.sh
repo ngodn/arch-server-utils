@@ -23,7 +23,7 @@ COMPONENTS=(
   "ssh|SSH Hardening|TCP MTU probing for connection reliability|1"
   "gpg|GPG Keys|Multiple fallback keyservers|1"
   "systemd|Systemd|Faster shutdown timeout (5s)|1"
-  "firewall|Firewall|UFW firewall with SSH allowed|1"
+  "firewall|Firewall|UFW firewall with SSH allowed|0"
   "mise|Mise|Version manager (Node, Ruby, Python, etc.)|1"
   "tailscale|Tailscale|Mesh VPN for secure server networking|1"
   "docker-dbs|Docker DBs|MySQL, PostgreSQL, Redis, MongoDB, MariaDB, MSSQL|0"

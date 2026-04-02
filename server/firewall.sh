@@ -4,6 +4,13 @@
 
 info "Setting up UFW firewall..."
 
+# UFW requires iptables kernel modules — skip in chroot/container environments
+if ! sudo iptables -L &>/dev/null; then
+  warn "iptables not available (chroot/container?) — skipping firewall setup"
+  info "Run this component again after booting into a full system"
+  return 0
+fi
+
 pkg_install ufw
 
 # Allow SSH before enabling (don't lock yourself out!)
