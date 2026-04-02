@@ -37,9 +37,28 @@ password: $CS_PASSWORD
 cert: false
 EOF
 
-# Enable and start the service
-svc enable code-server@${USER}
-svc start code-server@${USER} 2>/dev/null || true
+# serviced doesn't support template units (code-server@user), create a concrete service
+if ! pidof systemd &>/dev/null && command -v serviced &>/dev/null; then
+  sudo tee /etc/systemd/system/code-server.service >/dev/null << SVCEOF
+[Unit]
+Description=code-server
+After=network.target
+
+[Service]
+Type=exec
+ExecStart=/usr/bin/code-server
+Restart=always
+User=${USER}
+
+[Install]
+WantedBy=default.target
+SVCEOF
+  svc enable code-server
+  svc start code-server 2>/dev/null || true
+else
+  svc enable code-server@${USER}
+  svc start code-server@${USER} 2>/dev/null || true
+fi
 
 success "Code Server installed and running on port $cs_port"
 echo
