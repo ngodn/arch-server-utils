@@ -18,7 +18,7 @@ sudo ufw allow ssh
 
 # Enable firewall
 sudo ufw --force enable
-sudo systemctl enable ufw
+svc enable ufw
 
 success "UFW firewall enabled (SSH allowed)"
 info "Add more rules with: sudo ufw allow <port>"

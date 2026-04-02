@@ -23,10 +23,10 @@ EOF
 # Expose systemd-resolved to Docker network
 sudo mkdir -p /etc/systemd/resolved.conf.d
 echo -e '[Resolve]\nDNSStubListenerExtra=172.17.0.1' | sudo tee /etc/systemd/resolved.conf.d/20-docker-dns.conf >/dev/null
-sudo systemctl restart systemd-resolved 2>/dev/null || true
+svc restart systemd-resolved 2>/dev/null || true
 
 # Start Docker on-demand via socket activation
-sudo systemctl enable docker.socket
+svc enable docker.socket
 
 # Give current user privileged Docker access
 sudo usermod -aG docker "${USER}"
@@ -38,7 +38,7 @@ sudo tee /etc/systemd/system/docker.service.d/no-block-boot.conf >/dev/null << '
 DefaultDependencies=no
 EOF
 
-sudo systemctl daemon-reload
+svc daemon-reload 2>/dev/null || true
 
 success "Docker installed and configured"
 info "Log out and back in for docker group membership to take effect"

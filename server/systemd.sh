@@ -11,6 +11,6 @@ sudo tee /etc/systemd/system.conf.d/faster-shutdown.conf >/dev/null << 'EOF'
 DefaultTimeoutStopSec=5s
 EOF
 
-sudo systemctl daemon-reload
+svc daemon-reload 2>/dev/null || true
 
 success "Systemd shutdown timeout set to 5s"

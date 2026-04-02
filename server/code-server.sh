@@ -38,7 +38,8 @@ cert: false
 EOF
 
 # Enable and start the service
-sudo systemctl enable --now code-server@${USER}
+svc enable code-server@${USER}
+svc start code-server@${USER} 2>/dev/null || true
 
 success "Code Server installed and running on port $cs_port"
 echo

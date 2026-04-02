@@ -55,6 +55,18 @@ aur_install() {
   fi
 }
 
+# Service manager wrapper: uses serviced in chroot, systemctl otherwise
+svc() {
+  if pidof systemd &>/dev/null; then
+    sudo systemctl "$@"
+  elif command -v serviced &>/dev/null; then
+    sudo serviced "$@"
+  else
+    warn "No service manager available, skipping: systemctl $*"
+    return 1
+  fi
+}
+
 ensure_dir() {
   mkdir -p "$1"
 }
