@@ -11,6 +11,7 @@ source "$SCRIPT_DIR/server/helpers.sh"
 # Format: id|name|description|default (1=selected, 0=unselected)
 
 COMPONENTS=(
+  "env-fix|Environment Fix|Fix /etc/environment for services (HOME, PATH for claude/mise/cargo)|1"
   "shell|Shell Config|Bash aliases, functions, inputrc, history + eza, zoxide, fzf, bat|1"
   "starship|Starship|Minimal prompt with git branch and status|1"
   "tmux|Tmux|Terminal multiplexer with dev layouts|1"
