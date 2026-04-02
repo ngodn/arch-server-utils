@@ -4,6 +4,7 @@
 
 info "Setting up Claude Code..."
 
+export PATH="$HOME/.local/bin:$PATH"
 curl -fsSL https://claude.ai/install.sh | bash
 
 success "Claude Code installed"
