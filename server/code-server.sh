@@ -38,28 +38,18 @@ cert: false
 EOF
 
 # serviced doesn't support template units (code-server@user), create a concrete service
-if ! pidof systemd &>/dev/null && command -v serviced &>/dev/null; then
-  sudo tee /etc/systemd/system/code-server.service >/dev/null << SVCEOF
-[Unit]
-Description=code-server
-After=network.target
-
-[Service]
-Type=exec
-Environment=HOME=${HOME}
-Environment=PATH=${HOME}/.local/bin:${HOME}/.local/share/mise/shims:${HOME}/.cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-ExecStart=/usr/bin/code-server
-Restart=always
-User=${USER}
-
-[Install]
-WantedBy=default.target
-SVCEOF
-  svc enable code-server
-  svc start code-server 2>/dev/null || true
+if (( OMARCHY_IS_CHROOT_DISTRO )); then
+  write_serviced_unit "code-server" "/usr/bin/code-server --bind-addr 0.0.0.0:${cs_port}" \
+    --description "Code Server" \
+    --user "$USER" \
+    --env "HOME=${HOME}" \
+    --env "PATH=${HOME}/.local/bin:${HOME}/.local/share/mise/shims:${HOME}/.cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" \
+    --restart "always"
+  enable_service code-server
+elif (( OMARCHY_HAS_SYSTEMD )); then
+  enable_service "code-server@${USER}"
 else
-  svc enable code-server@${USER}
-  svc start code-server@${USER} 2>/dev/null || true
+  enable_service code-server
 fi
 
 success "Code Server installed and running on port $cs_port"

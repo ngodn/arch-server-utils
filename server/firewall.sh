@@ -4,6 +4,12 @@
 
 info "Setting up UFW firewall..."
 
+# Warn about chroot-distro iptables conflicts
+if (( OMARCHY_IS_CHROOT_DISTRO )); then
+  warn "UFW may conflict with Android's iptables rules"
+  warn "Android manages iptables externally — rules may be overwritten"
+fi
+
 # UFW requires iptables kernel modules — skip in chroot/container environments
 if ! sudo iptables -L &>/dev/null; then
   warn "iptables not available (chroot/container?) — skipping firewall setup"
@@ -18,7 +24,7 @@ sudo ufw allow ssh
 
 # Enable firewall
 sudo ufw --force enable
-svc enable ufw
+enable_service ufw
 
 success "UFW firewall enabled (SSH allowed)"
 info "Add more rules with: sudo ufw allow <port>"

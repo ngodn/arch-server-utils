@@ -4,6 +4,11 @@
 
 info "Setting up Systemd tweaks..."
 
+if (( ! OMARCHY_HAS_SYSTEMD )); then
+  warn "systemd not available (chroot/container) — skipping systemd tweaks"
+  return 0
+fi
+
 # Reduce shutdown timeout from default 90s to 5s
 sudo mkdir -p /etc/systemd/system.conf.d
 sudo tee /etc/systemd/system.conf.d/faster-shutdown.conf >/dev/null << 'EOF'

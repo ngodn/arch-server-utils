@@ -41,8 +41,14 @@ fi
 
 # Clone and build yay
 TMPDIR=$(mktemp -d)
-git clone https://aur.archlinux.org/yay-bin.git "$TMPDIR/yay-bin"
-cd "$TMPDIR/yay-bin"
+if (( OMARCHY_IS_ARM )); then
+  info "Building yay from source (binary not available for ARM)..."
+  git clone https://aur.archlinux.org/yay.git "$TMPDIR/yay-build"
+  cd "$TMPDIR/yay-build"
+else
+  git clone https://aur.archlinux.org/yay-bin.git "$TMPDIR/yay-build"
+  cd "$TMPDIR/yay-build"
+fi
 makepkg -si --noconfirm
 cd - >/dev/null
 rm -rf "$TMPDIR"

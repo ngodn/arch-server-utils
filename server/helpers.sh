@@ -77,3 +77,6 @@ backup_file() {
     info "Backed up $1"
   fi
 }
+
+# Source chroot compatibility layer
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/chroot-compat.sh"

@@ -30,9 +30,15 @@ if ! grep -q "tcp_mtu_probing" /etc/sysctl.d/99-ssh-mtu.conf 2>/dev/null; then
   sudo sysctl -p /etc/sysctl.d/99-ssh-mtu.conf 2>/dev/null || true
 fi
 
+# Write optimized serviced unit for chroot-distro
+if (( OMARCHY_IS_CHROOT_DISTRO )); then
+  write_serviced_unit "sshd" "/usr/bin/sshd -D" \
+    --description "OpenSSH Daemon" \
+    --restart "on-failure"
+fi
+
 # Enable and start sshd
-svc enable sshd
-svc start sshd 2>/dev/null || true
+enable_service sshd
 
 success "SSH server configured on port $ssh_port"
 info "Root login disabled. Connect with: ssh ${USER}@<server-ip> -p $ssh_port"

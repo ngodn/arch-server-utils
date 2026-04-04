@@ -8,15 +8,20 @@ pkg_install tailscale
 
 # Detect chroot environment and enable userspace networking
 # (avoids TUN device conflicts with Android's Tailscale app)
-if ! pidof systemd &>/dev/null; then
+if (( OMARCHY_IS_CHROOT_DISTRO )); then
+  write_serviced_unit "tailscaled" \
+    "/usr/bin/tailscaled --state=/var/lib/tailscale/tailscaled.state --tun=userspace-networking" \
+    --description "Tailscale Daemon" \
+    --restart "on-failure"
+  info "Enabled userspace networking (chroot-distro detected)"
+elif ! pidof systemd &>/dev/null; then
   if ! grep -q "userspace-networking" /etc/default/tailscaled 2>/dev/null; then
     sudo sed -i 's|FLAGS=""|FLAGS="--tun=userspace-networking"|' /etc/default/tailscaled
     info "Enabled userspace networking (chroot detected)"
   fi
 fi
 
-svc enable tailscaled
-svc start tailscaled 2>/dev/null || true
+enable_service tailscaled
 
 # Wait for socket
 sleep 2
@@ -30,7 +35,7 @@ else
 fi
 
 # Offer to serve code-server over HTTPS
-if command -v code-server &>/dev/null || svc status code-server &>/dev/null 2>&1; then
+if command -v code-server &>/dev/null || is_service_active code-server 2>/dev/null; then
   echo
   read -rp "  Serve code-server over Tailscale HTTPS? [Y/n]: " serve_cs
   serve_cs="${serve_cs:-y}"

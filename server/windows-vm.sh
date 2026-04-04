@@ -22,6 +22,13 @@ check_prerequisites() {
   local REQUIRED_SPACE=$((DISK_SIZE_GB + 10))
 
   if [[ ! -e /dev/kvm ]]; then
+    ARCH=$(uname -m)
+    if [[ "$ARCH" == "aarch64" ]]; then
+      echo "WARNING: Windows VM requires x86_64 KVM — will not work on aarch64"
+      echo "Proceeding with setup, but the VM will not boot on this architecture"
+      sudo modprobe kvm 2>/dev/null || true
+      return 0 2>/dev/null || exit 0
+    fi
     echo "KVM virtualization not available!"
     echo
     echo "Please enable virtualization in BIOS or run:"

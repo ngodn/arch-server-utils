@@ -10,6 +10,12 @@ if ! command -v docker &>/dev/null; then
   return 0
 fi
 
+# Ensure Docker is running
+if ! is_service_active docker; then
+  enable_service docker
+  sleep 2
+fi
+
 # Database definitions
 DB_NAMES=("MySQL 8.4" "PostgreSQL 18" "MariaDB 11.8" "Redis 7" "MongoDB" "MSSQL 2022")
 DB_SELECTED=(0 0 0 0 0 0)
@@ -87,11 +93,15 @@ for i in "${!DB_NAMES[@]}"; do
           mongo:noble && success "MongoDB on port 27017 (admin/admin123)" || warn "MongoDB failed (container may already exist)"
         ;;
       5)
-        info "Starting MSSQL 2022..."
-        sudo docker run -d --restart unless-stopped \
-          -p "127.0.0.1:1433:1433" --name=mssql \
-          -e MSSQL_PID=Developer -e ACCEPT_EULA=Y -e "MSSQL_SA_PASSWORD=@dmin123" \
-          mcr.microsoft.com/mssql/server:2022-CU12-ubuntu-22.04 && success "MSSQL 2022 on port 1433 (sa/@dmin123)" || warn "MSSQL failed (container may already exist)"
+        if (( OMARCHY_IS_ARM )); then
+          warn "MSSQL Server Docker image is x86_64 only — skipping on ARM"
+        else
+          info "Starting MSSQL 2022..."
+          sudo docker run -d --restart unless-stopped \
+            -p "127.0.0.1:1433:1433" --name=mssql \
+            -e MSSQL_PID=Developer -e ACCEPT_EULA=Y -e "MSSQL_SA_PASSWORD=@dmin123" \
+            mcr.microsoft.com/mssql/server:2022-CU12-ubuntu-22.04 && success "MSSQL 2022 on port 1433 (sa/@dmin123)" || warn "MSSQL failed (container may already exist)"
+        fi
         ;;
     esac
   fi

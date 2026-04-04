@@ -9,6 +9,16 @@ if ! command -v docker &>/dev/null; then
   return 1
 fi
 
+# Ensure Docker is running
+if ! is_service_active docker; then
+  enable_service docker
+  sleep 2
+fi
+
+if (( OMARCHY_IS_ARM )); then
+  info "Note: Using Firefox for Neko on ARM (Chromium may be unavailable)"
+fi
+
 # Prompt for passwords
 echo
 read -rp "  User password [neko]: " neko_user_pass
@@ -47,6 +57,11 @@ services:
       NEKO_MEMBER_MULTIUSER_ADMIN_PASSWORD: "$neko_admin_pass"
     volumes:
       - \$HOME/.neko/firefox:/home/neko/.mozilla/firefox
+EOF
+
+# Google Chrome is not reliably available on ARM — only add on x86_64
+if (( ! OMARCHY_IS_ARM )); then
+  cat >> "$HOME/.config/neko/docker-compose.yml" << EOF
 
   google-chrome:
     image: ghcr.io/m1k1o/neko/google-chrome:latest
@@ -68,6 +83,7 @@ services:
     volumes:
       - \$HOME/.neko/google-chrome:/home/neko/.config/google-chrome
 EOF
+fi
 
 # Start the containers
 info "Pulling and starting Neko containers..."
@@ -76,7 +92,9 @@ docker compose -f "$HOME/.config/neko/docker-compose.yml" up -d
 success "Neko virtual browsers running"
 echo
 info "Firefox:       http://$neko_ip:9311"
-info "Google Chrome: http://$neko_ip:9312"
+if (( ! OMARCHY_IS_ARM )); then
+  info "Google Chrome: http://$neko_ip:9312"
+fi
 echo
 info "Config: ~/.config/neko/docker-compose.yml"
 info "Profiles: ~/.neko/firefox, ~/.neko/google-chrome"

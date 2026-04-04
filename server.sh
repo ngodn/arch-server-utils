@@ -61,8 +61,12 @@ preflight() {
   fi
 
   if ! command -v sudo &>/dev/null; then
-    error "sudo is required. Install it with: pacman -S sudo"
-    exit 1
+    if (( EUID == 0 )); then
+      pacman -S --needed --noconfirm sudo
+    else
+      error "sudo is required. Install it with: pacman -S sudo"
+      exit 1
+    fi
   fi
 }
 
@@ -81,6 +85,9 @@ show_menu() {
   for i in "${!COMPONENTS[@]}"; do
     IFS='|' read -r id name desc _ <<< "${COMPONENTS[$i]}"
     local num=$((i + 1))
+    local suffix
+    suffix="$(get_compat_suffix "$id")"
+    desc="${desc}${suffix}"
 
     if (( SELECTED[i] )); then
       printf "   ${GREEN}[x]${NC} %2d) ${BOLD}%-16s${NC} ${DIM}%s${NC}\n" "$num" "$name" "$desc"
@@ -162,6 +169,7 @@ run_install() {
       IFS='|' read -r id name _ _ <<< "${COMPONENTS[$i]}"
       echo
       echo -e "  ${CYAN}━━━ $name ━━━${NC}"
+      warn_if_incompatible "$id"
       source "$SCRIPT_DIR/server/$id.sh"
     fi
   done
@@ -178,5 +186,16 @@ run_install() {
 # ── Main ───────────────────────────────────────────────────────────
 
 preflight
+detect_environment
+
+echo
+if (( OMARCHY_IS_CHROOT_DISTRO )); then
+  info "Environment: chroot-distro (${OMARCHY_ARCH}, serviced)"
+elif (( OMARCHY_IS_ARM )); then
+  info "Environment: Arch Linux ARM (${OMARCHY_ARCH})"
+else
+  info "Environment: Arch Linux (${OMARCHY_ARCH})"
+fi
+
 run_menu
 run_install
